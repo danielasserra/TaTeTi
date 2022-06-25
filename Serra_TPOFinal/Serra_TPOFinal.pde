@@ -1,3 +1,6 @@
+// Ta Te Ti Interactivo
+// Desarrolladora: Daniela Serra
+ 
 //Imagen de fondo
 PImage fondo;
 
@@ -14,7 +17,7 @@ int turno; // nos permite saber a qué jugador le toca jugar.
 // 2 = cruz
 
 //Estado de cada casillero
-int [][] estadoCasillero;
+int [][] casillero;
 int x;
 int y;
 
@@ -31,6 +34,9 @@ boolean gameOver;
 
 //Ganador
 int ganador;
+
+//Contador para empate
+int cnt;
 
 //configuración de pantalla
 void settings () {
@@ -55,8 +61,10 @@ void reset() {
   gameOver = false;
   //Ganador
   ganador = 0;
+  //Contador para empate
+  cnt = 0;
   //Estado de los casilleros
-  estadoCasillero = new int [][] {
+  casillero = new int [][] {
     {0, 0, 0},
     {0, 0, 0},
     {0, 0, 0}
@@ -73,28 +81,16 @@ void draw() {
 
     //Función para establecer el estado de los casilleros del juego
     estadoJuego();
-
-    //Función que determina al ganador del juego.
-    winner();
-    println(ganador);
-  } else if (modo == 2) {
-    pantallaFinal();
-    if (mousePressed) {
-      reset();
-    }
   }
 }
 
-
-
-
-//Creo una función que dibuja el tablero
-//basado en una lista
+//Creo una función que dibuja el tablero basado Array 2D
 void dibujarTablero() {
-  //imagen de fondo para limpiar pantalla al iniciar partida nueva
+  //imagen de fondo
   background(fondo);
+  //color de línea
   stroke(255);
-  //tablero
+  //Tablero:
   //Loop de filas
   for (int lineaY = 200; lineaY <= 599; lineaY +=200) {
     //Loop de columnas
@@ -111,15 +107,16 @@ void fichasTablero() {
   for (int y = 0; y <= 2; y++) {
     //Loop que revisa las columnas
     for (int x = 0; x <=2; x++) {
+
       //Si es el turno del jugador 1
-      if (estadoCasillero [x][y]== 1) {
+      if (casillero [x][y]== 1) {
         //Ficha Círculo
         fill(255, 99);
         noStroke();
-        //text("O", (x*200)+30, (y*200)+170);
         ellipse((x*200)+100, (y*200)+100, 150, 150);
+
         //Si es el turno del jugador 2
-      } else if (estadoCasillero [x][y] == 2) {
+      } else if (casillero [x][y] == 2) {
         //Ficha Cruz
         fill(255, 99);
         text("X", (x*200)+30, (y*200)+175);
@@ -130,47 +127,90 @@ void fichasTablero() {
 
 //Función para establecer el estado de los casilleros del juego
 void estadoJuego() {
+  //Loop que revisa las columnas
   for (x = 0; x <= 2; x++) {
+    //Loop que revisa las filas
     for (y = 0; y <= 2; y++) {
-      //si la columna tiene la misma ficha en sus tres casilleros
-      if ((estadoCasillero [x][0] == estadoCasillero [x][1] && estadoCasillero [x][1] == estadoCasillero [x][2] && estadoCasillero [x][1]!= 0)
-        //si la fila tiene la misma ficha en sus tres casilleros
-        || (estadoCasillero [0][y] == estadoCasillero [1][y] && estadoCasillero [1][y] == estadoCasillero [2][y] && estadoCasillero [1][y]!= 0)
-        //si la diagonal tiene la misma ficha en sus tres casilleros
-        || (estadoCasillero [0][0] == estadoCasillero [1][1] && estadoCasillero [1][1] == estadoCasillero [2][2] && estadoCasillero [1][1]!= 0)
-        //si la otra diagonal tiene la misma ficha en sus tres casilleros
-        || (estadoCasillero [2][0] == estadoCasillero [1][1] && estadoCasillero [1][1] == estadoCasillero [0][2] && estadoCasillero [1][1]!= 0)) {
 
+      if
+        //si la columna tiene la misma ficha en sus tres casilleros
+        (casillero [x][0] == casillero [x][1] && casillero [x][0] == casillero [x][2] && casillero [x][0]!= 0) {
         //Finalizar juego
         gameOver = true;
-        modo = 2;
-      } else if (modo == 2) {
+        modo = 2; //modo no jugable
+        ganador = casillero[x][0];
+      } else if
+        //si la fila tiene la misma ficha en sus tres casilleros
+        (casillero [0][y] == casillero [1][y] && casillero [0][y] == casillero [2][y] && casillero [0][y]!= 0) {
+        //Finalizar juego
+        gameOver = true;
+        modo = 2; //modo no jugable
+        ganador = casillero [0][y];
+      } else if
+        //si la diagonal tiene la misma ficha en sus tres casilleros
+        (casillero [0][0] == casillero [1][1] && casillero [1][1] == casillero [2][2] && casillero [1][1]!= 0) {
+        //Finalizar juego
+        gameOver = true;
+        modo = 2; //modo no jugable
+        ganador = casillero [0][0];
+      } else if
+        //si la otra diagonal tiene la misma ficha en sus tres casilleros
+        (casillero [2][0] == casillero [1][1] && casillero [1][1] == casillero [0][2] && casillero [1][1]!= 0) {
+        //Finalizar juego
+        gameOver = true;
+        modo = 2; //modo no jugable
+        ganador = casillero[0][2];
+        
+        //código para el empate https://www.youtube.com/watch?v=sXu48OOm1ac 
+      } else if
+        (casillero[x][y] == 0) {
+        cnt++;
+      }
+      if (modo == 2) {
         pantallaFinal();
       }
     }
   }
-}
-
-//Función que determina al ganador del juego
-void winner() {
-  if (gameOver) {
-    if (turno == 1) {
-      ganador = 1;
-    } else if (turno == 2) {
-      ganador = 2;
-    }
+  if (cnt == 0 && ganador == 0) {
+    ganador = 1;
   }
 }
+
+
 void pantallaFinal() {
+  //empate
   if (ganador == 1) {
     textSize (50);
-    text ("Fin del juego, 'X' Gana", 15, 320);
-  } else if (ganador == 2) {
+    text ("Fin del juego, Empate", 15, 320);
+    //reiniciarJuego();
+    //gana X
+  } else if (turno == 1) {
     textSize (50);
-    text ("Fin del juego, 'O' Gana", 15, 320);
-    //} else {
-    //  textSize (50);
-    //  text ("Fin del juego, Empate", 15, 320);
+    text ("Fin del juego, 'X' Gana", 15, 320);
+    //reiniciarJuego();
+    //gana O
+  } else if (turno == 2) {
+    textSize (50);
+    text ("Fin del juego, 'O' Gana", 100, 320);
+    //reiniciarJuego();
+  }
+}
+
+void reiniciarJuego() {
+  fill(0, 50);
+  rect(100, 430, 310, 210);
+  fill(255);
+  text ("Volver a Jugar", 100, 500);
+  if (mouseX>100 && mouseX<410 && mouseY>400 && mouseY<600) {
+    cursor(HAND);
+  } else {
+    cursor(ARROW);
+  }
+  if (mousePressed) {
+    if (mouseX>100 && mouseX<400 && mouseY>400 && mouseY<600) {
+      cursor(HAND);
+      reset();
+    }
   }
 }
 
@@ -179,12 +219,13 @@ void mousePressed() {
    Con estos datos se define la posición de las fichas.
    */
   println (mouseX/200, mouseY/200);
+
   //Los clics fuera del tablero no dan error
   if (mouseX<600) {
     //Sólo coloca ficha si el espacio está vacío
-    if (estadoCasillero [mouseX/200][mouseY/200] == 0) {
+    if (casillero [mouseX/200][mouseY/200] == 0) {
       //Cambia de jugador por turno
-      estadoCasillero [mouseX/200][mouseY/200] = turno;
+      casillero [mouseX/200][mouseY/200] = turno;
       if (turno == 1) {
         turno = 2;
       } else if (turno == 2) {
