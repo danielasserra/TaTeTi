@@ -1,6 +1,6 @@
 // Ta Te Ti Interactivo
 // Desarrolladora: Daniela Serra
- 
+
 //Imagen de fondo
 PImage fondo;
 
@@ -69,6 +69,8 @@ void reset() {
     {0, 0, 0},
     {0, 0, 0}
   };
+  //Tamaño de la ficha X
+  textSize (200);
 }
 
 void draw() {
@@ -160,8 +162,8 @@ void estadoJuego() {
         gameOver = true;
         modo = 2; //modo no jugable
         ganador = casillero[0][2];
-        
-        //código para el empate https://www.youtube.com/watch?v=sXu48OOm1ac 
+
+        //código para el empate https://www.youtube.com/watch?v=sXu48OOm1ac
       } else if
         (casillero[x][y] == 0) {
         cnt++;
@@ -182,36 +184,34 @@ void pantallaFinal() {
   if (ganador == 1) {
     textSize (50);
     text ("Fin del juego, Empate", 15, 320);
+    fill(0, 50);
+    rect(100, 430, 310, 210);
+    fill(255);
+    text ("Volver a Jugar", 100, 500);
     //reiniciarJuego();
     //gana X
   } else if (turno == 1) {
     textSize (50);
     text ("Fin del juego, 'X' Gana", 15, 320);
+    fill(0, 50);
+    rect(100, 430, 310, 210);
+    fill(255);
+    text ("Volver a Jugar", 100, 500);
     //reiniciarJuego();
     //gana O
   } else if (turno == 2) {
     textSize (50);
     text ("Fin del juego, 'O' Gana", 100, 320);
+    fill(0, 50);
+    rect(100, 430, 310, 210);
+    fill(255);
+    text ("Volver a Jugar", 100, 500);
     //reiniciarJuego();
   }
 }
 
 void reiniciarJuego() {
-  fill(0, 50);
-  rect(100, 430, 310, 210);
-  fill(255);
-  text ("Volver a Jugar", 100, 500);
-  if (mouseX>100 && mouseX<410 && mouseY>400 && mouseY<600) {
-    cursor(HAND);
-  } else {
-    cursor(ARROW);
-  }
-  if (mousePressed) {
-    if (mouseX>100 && mouseX<400 && mouseY>400 && mouseY<600) {
-      cursor(HAND);
-      reset();
-    }
-  }
+    reset();
 }
 
 void mousePressed() {
@@ -219,18 +219,23 @@ void mousePressed() {
    Con estos datos se define la posición de las fichas.
    */
   println (mouseX/200, mouseY/200);
-
-  //Los clics fuera del tablero no dan error
-  if (mouseX<600) {
-    //Sólo coloca ficha si el espacio está vacío
-    if (casillero [mouseX/200][mouseY/200] == 0) {
-      //Cambia de jugador por turno
-      casillero [mouseX/200][mouseY/200] = turno;
-      if (turno == 1) {
-        turno = 2;
-      } else if (turno == 2) {
-        turno = 1;
+  if (modo == 1) {
+    //Los clics fuera del tablero no dan error
+    if (mouseX<600) {
+      //Sólo coloca ficha si el espacio está vacío
+      if (casillero [mouseX/200][mouseY/200] == 0) {
+        //Cambia de jugador por turno
+        casillero [mouseX/200][mouseY/200] = turno;
+        if (turno == 1) {
+          turno = 2;
+        } else if (turno == 2) {
+          turno = 1;
+        }
       }
+    }
+  } else if (modo == 2) {
+    if (mouseX > 100 && mouseX<400 && mouseY>400 && mouseY<600) {
+      reiniciarJuego();
     }
   }
 }
